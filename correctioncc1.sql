@@ -102,5 +102,48 @@ insert into realise(mle,idtache,datedb,datef) values(1,1,"2009-05-17","2011-05-1
  drop view if exists q2;
 create view q2 as 
 select nom,prenom ,count(r.idtache) as counter,e.mle  from employe e , realise r , tache t 
-where e.mle=r.mle and r.idtache=t.idtache  group by e.mle;
-select * from q2
+where e.mle=r.mle and r.idtache=t.idtache  group by e.mle ;
+select * from q2;
+-- q3
+drop function if exists q3;
+delimiter $$
+create function q3( numemploye int )
+returns int 
+deterministic
+begin
+declare nb int;
+select sum(abs(datediff(datedb,datef))) into nb from realise where mle=numemploye;
+return nb;
+end$$
+delimiter ;
+ select q3(1);
+ -- q4
+ drop procedure if exists q4;
+ delimiter $$
+ create procedure q4()
+ begin
+ select t.* from  tache t , projet p 
+ where t.idprojet=p.idprojet and p.idprojet=3;
+ end$$
+ delimiter ;
+ call q4;
+ -- q5
+ drop procedure if exists q5;
+ delimiter $$
+ create procedure q5()
+ begin
+ end$$
+ delimiter ;
+ call q5;
+ -- q6
+ drop procedure if exists q6;
+ delimiter $$
+ create procedure q6()
+ begin
+ select * from employe e , realise r , tache t   where 
+ e.mle=r.mle and t.idtache=r.idtache group by e.mle having abs(datediff(datedb,datef))>30; 
+ end$$
+ delimiter ;
+ call q6;
+ -- q7
+ 
